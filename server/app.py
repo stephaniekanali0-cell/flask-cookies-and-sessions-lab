@@ -25,9 +25,18 @@ def index_articles():
     articles = [ArticleSchema().dump(a) for a in Article.query.all()]
     return make_response(articles)
 
-@app.route('/articles/<int:id>')
+@app.route('/articles/<int:id>',methods=["GET"])
 def show_article(id):
-    pass
+    # This sets the initial value of views to 0.
+    view = session.get("page_views", 0) + 1
+    session["page_views"] = view +1
+
+    if view > 3:
+      return jsonify({
+          "message": "Maximum pageview limit reached "
+      }),401
+
+    
 
 
 if __name__ == '__main__':
